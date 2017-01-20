@@ -1,0 +1,122 @@
+<!-- Task Pro Home Page -->
+<apex:page controller="TaskProHomePageController" applyHtmlTag="false" showHeader="false" docType="HTML-5.0" >
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">  
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+            <title>TaskPro</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <apex:stylesheet value="{!URLFOR($Resource.SLDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+            <style>
+                .objPick{height: 33px; width: 70%;}
+                .Header{   font-weight:bold;color:white;font-size:40px; text-align: center; background-color: #1b4167;height: 77px;}
+                .gridcol1{    margin-left: 30px;margin-top: 15px; margin-bottom: 15px;}
+                .newbtn{    float: right; margin-right: 35px;margin-top: 15px;}
+                .gridcol2{    margin-top: 23px;margin-left: -193px;} 
+                .UsrPick{height: 33px; width: 196%;}
+                .card1{    margin-top:10px}
+            </style>
+        </head>
+        <body>
+            <apex:form > 
+                <div class="slds">
+                    <div class="Header">
+                        <h1>TaskPro</h1>
+                    </div>
+                    <div class="slds-grid">
+                        <div class="slds-col ">
+                            <div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click">
+                                <div class="slds-form-element gridcol1">
+                                    <label class="slds-form-element__label" for="text-input-01">Select Object</label>
+                                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right slds-picklist__input">
+                                        
+                                        <apex:selectList size="1" value="{!obj}" id="text-input-01" styleClass="objPick slds-lookup__search-input ">
+                                            <apex:selectOptions value="{!objs}"/>
+                                            <apex:actionSupport action="{!Records}" event="onchange" reRender="a" />
+                                        </apex:selectList>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                        
+                        <div class="slds-col gridcol2">
+                            <div class="slds-global-header__item slds-global-header__item--search">
+                                <div class="slds-form-element slds-lookup">
+                                    <label class="slds-assistive-text" for="global-search-01">Search Task</label>
+                                    <div class="slds-form-element__control lookup__search-control slds-input-has-icon slds-input-has-icon--left">
+                                        
+                                        <input type="search" id="global-search-01" class="slds-input slds-lookup__search-input" placeholder="Search Task" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-col">
+                            <button class="slds-button slds-button--neutral slds-not-selected newbtn" aria-live="assertive">
+                                <span class="slds-text-not-selected">
+                                    New Task</span></button>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-col" style="float:left;">
+                        <div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click">
+                            <div class="slds-form-element gridcol1">
+                                <label class="slds-form-element__label" for="text-input-02">Assign To</label>
+                                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right slds-picklist__input">
+                                    <apex:selectList size="1" value="{!UserId}" id="text-input-02" styleClass="UsrPick slds-lookup__search-input ">
+                                        <apex:selectOptions value="{!UserList}"/>
+                                    </apex:selectList> 
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                    
+                    <br/> <br/> <br/><br/> <br/> 
+                    
+                    <div class="slds-grid slds-wrap slds-grid--pull-padded" >
+                        <apex:repeat value="{!Stat}" var="s">
+                            <apex:repeat value="{!s}" var="Rec">
+                                <div class="slds-p-horizontal--small slds-large-size--{!acr}-of-12" >
+                                    <div class="slds-grid slds-grid--vertical slds-navigation-list--vertical"><br/>
+                                        <ul class="slds-has-dividers--around-space">
+                                            <li class="slds-is-active ">
+                                                <a class="slds-navigation-list--vertical__action" >
+                                                    <apex:outputText value="{!Rec}"/> </a>
+                                                <apex:outputPanel id="a" >
+                                                    <apex:repeat value="{!Tsklist}" var="c">
+                                                     
+                                                     
+                                                        <apex:outputPanel rendered="{!if(c.Status=Rec,true,false)}">
+                                                               
+                                                                   <span class="slds-text-not-selected">
+                                                                    <div class="slds-grid">
+                                                                        <div class="slds-col card1">
+                                                                            <div class="slds-box slds-box--large slds-text-align--left">
+                                                                                <span style="font-weight: bold; color:black; ">Record </span>  <span>:<apex:outputField rendered="{!if(c.whoId=Null,true,false)}" value="{!c.whatId}" style="font-weight: bold;color:black;" /></span>
+                                                                                <span>:<apex:outputField rendered="{!if(c.whatId=Null,true,false)}" value="{!c.whoId}" style="font-weight: bold;color:black;" /></span><br/>
+                                                                                <span style="font-weight: bold;color:black; ">Priority </span>  <span>:<apex:outputText value="{!c.Priority}" style="color:black;"  /></span><br/>   
+                                                                                <span style="font-weight: bold;color:black; ">Status </span>  <span>:&nbsp;<apex:outputText value="{!c.Status}" style="color:black;" /></span><br/>   
+                                                                                <span style="font-weight: bold;color:black; "> Subject  </span>  <span>: <apex:outputText value="{!c.Subject}" style="color:black;"  /></span><br/>    
+                                                                                <div>
+                                                                                    <span style="font-weight: bold;bold;color:black;">  Assign To : </span><span> <apex:outputField value="{!c.OwnerId}" style="color:black;"  /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                    <apex:repeat value="{!UsrPhoto}" var="u">
+                                                                                        <apex:outputText rendered="{!if(u.Id=c.OwnerId,true,false)}"> <apex:image url="{!u.FullPhotoUrl}" height="15px" width="15px" /></apex:outputText>
+                                                                                    </apex:repeat>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div></span>
+                                                        </apex:outputPanel>
+                                                    </apex:repeat>
+                                                </apex:outputPanel>
+                                            </li></ul>
+                                        <br/>
+                                    </div>
+                                </div></apex:repeat>
+                        </apex:repeat>
+                    </div>    
+                </div>
+            </apex:form> 
+        </body>
+    </html> 
+</apex:page>
